@@ -29,6 +29,7 @@ let
 
   cudaLibs = map lib.getLib (with pkgs.cudaPackages; [
     cuda_cudart # libcudart.so.12
+    cuda_nvrtc # libnvrtc.so.12, dlopened at run time, never NEEDED
     libcublas # libcublas.so.12, libcublasLt.so.12
     libcufft # libcufft.so.11
     cudnn # libcudnn.so.9
@@ -49,9 +50,9 @@ let
       pkgs.stdenv.cc.cc.lib # libstdc++, libgcc_s
     ] ++ lib.optionals withCuda cudaLibs;
 
-    # rc-astro also dlopens the CUDA libraries by soname, for its device
-    # listing. autoPatchelf only follows NEEDED entries, so add them to
-    # every RUNPATH explicitly.
+    # rc-astro also dlopens the CUDA libraries by soname: libcuda for its
+    # device listing, libnvrtc before it enables the GPU. autoPatchelf only
+    # follows NEEDED entries, so add every lib dir to every RUNPATH.
     runtimeDependencies = lib.optionals withCuda cudaLibs;
     appendRunpaths = lib.optionals withCuda [ "/run/opengl-driver/lib" ];
 
