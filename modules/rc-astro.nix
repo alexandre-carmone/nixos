@@ -50,11 +50,15 @@ let
       pkgs.stdenv.cc.cc.lib # libstdc++, libgcc_s
     ] ++ lib.optionals withCuda cudaLibs;
 
-    # rc-astro also dlopens the CUDA libraries by soname: libcuda for its
-    # device listing, libnvrtc before it enables the GPU. autoPatchelf only
-    # follows NEEDED entries, so add every lib dir to every RUNPATH.
+    # Several libraries are dlopened by bare soname, so autoPatchelf, which
+    # only follows NEEDED entries, does not see them:
+    #   - libonnxruntime loads its provider libraries from its own directory.
+    #     Upstream that works through a $ORIGIN RUNPATH, which autoPatchelf
+    #     rewrites. Put the app directory back on every RUNPATH.
+    #   - rc-astro probes libcuda (device listing) and libnvrtc (GPU engine).
     runtimeDependencies = lib.optionals withCuda cudaLibs;
-    appendRunpaths = lib.optionals withCuda [ "/run/opengl-driver/lib" ];
+    appendRunpaths = [ "${placeholder "out"}/opt/rc-astro" ]
+      ++ lib.optionals withCuda [ "/run/opengl-driver/lib" ];
 
     unpackPhase = ''
       runHook preUnpack
