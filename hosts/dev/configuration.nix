@@ -25,6 +25,7 @@ in
     ../../modules/wine.nix
     ../../modules/autostakkert.nix
     ../../modules/graxpert.nix
+    ../../modules/rc-astro.nix
     ../../modules/syncthing.nix
     ../../modules/printing.nix
     ../../modules/ina-vpn.nix

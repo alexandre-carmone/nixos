@@ -7,8 +7,8 @@ NixOS flake for two astrophotography machines and a gaming desktop.
 | Host | hostName | Role |
 | --- | --- | --- |
 | `astronix` | `astronomix` | The rig. Headless Plasma 6 on X11, SDDM autologin, xrdp, a fake EDID for the virtual display, a WiFi hotspot fallback, and the `junos-web` capture app. |
-| `dev` | `inix` | The workstation. GNOME, DisplayLink dock, corporate CA and VPN bits, dev tooling. |
-| `gamix` | `gamix` | The gaming desktop. Plasma 6 on Wayland on an NVIDIA card (open modules), CUDA libs on `LD_LIBRARY_PATH`, Steam with Proton-GE and a gamescope session, Heroic, GameMode, MangoHud, Discord. |
+| `dev` | `inix` | The workstation. GNOME, DisplayLink dock, corporate CA and VPN bits, dev tooling, RC-Astro CLI on the CPU. |
+| `gamix` | `gamix` | The gaming desktop. Plasma 6 on Wayland on an NVIDIA card (open modules), CUDA libs on `LD_LIBRARY_PATH`, RC-Astro CLI on the GPU, Steam with Proton-GE and a gamescope session, Heroic, GameMode, MangoHud, Discord. |
 
 All three run user `alexandre` and share the astro stack: INDI, KStars, PHD2, Siril.
 `dev` and `gamix` each have a `-dark` twin for darkman.
@@ -33,6 +33,7 @@ modules/
   gsc.nix              GSC star catalog, for INDI's CCD Simulator
   graxpert.nix         GraXpert, from the upstream bundle
   autostakkert.nix     AutoStakkert!4, under Wine (dev)
+  rc-astro.nix         RC-Astro CLI (BlurX/NoiseX/StarXTerminator), from the upstream installer; CUDA on nvidia hosts (dev, gamix)
   desktop-plasma.nix   headless Plasma + xrdp (astronix)
   desktop-plasma-wayland.nix  Plasma on Wayland, real monitor (gamix)
   desktop-gnome.nix    GNOME (dev)

@@ -7,6 +7,8 @@
     ./cuda.nix
     ../../modules/common.nix
     ../../modules/astro.nix
+    ../../modules/rc-astro.nix
+    ../../modules/graxpert.nix
     ../../modules/desktop-plasma-wayland.nix
     ../../modules/darkman.nix
     ../../modules/gaming.nix
