@@ -43,7 +43,7 @@ modules/
   printing.nix         CUPS + the office printer (dev)
   ina-vpn.nix          `inavpn`: INA VPN in one command, 2FA from tb-otp (dev)
   ina-vpn-auto/tb-otp/ tb-otp + the VPN script; vendor/ is built from the AppImage
-  syncthing.nix        services.astronix.syncthing (dev)
+  syncthing.nix        services.astronix.syncthing (dev, gamix)
   wifi-hotspot.nix     services.astronix.wifi (astronix)
 hosts/
   astronix/            configuration.nix + hardware-configuration.nix

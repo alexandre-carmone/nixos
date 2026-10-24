@@ -127,6 +127,9 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    # The CLI on PATH, for `syncthing --device-id`.
+    environment.systemPackages = [ config.services.syncthing.package ];
+
     services.syncthing = {
       enable = true;
       user = cfg.user;
