@@ -74,7 +74,7 @@ in
         };
         # The extension skips the lock screen. It gets one fixed image.
         "org/gnome/desktop/screensaver".picture-uri =
-          "file:///home/alexandre/Pictures/wallpapers/master_noth_american.png";
+          "file:///home/alexandre/Pictures/wallpapers/IMG_2668.jpeg";
         "org/gnome/shell/extensions/tilingshell" = {
           inner-gaps = lib.gvariant.mkUint32 8;
           outer-gaps = lib.gvariant.mkUint32 8;
