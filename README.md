@@ -32,7 +32,7 @@ modules/
   imppg.nix            ImPPG, built from source
   gsc.nix              GSC star catalog, for INDI's CCD Simulator
   graxpert.nix         GraXpert, from the upstream bundle
-  ost.nix              services.astronix.ost: OST headless observatory server + nginx frontend (astronix)
+  ost.nix              services.astronix.ost: OST headless observatory server as a system or user service + nginx frontend (astronix)
   ost/                 the ostserver package, built from source
   autostakkert.nix     AutoStakkert!4, under Wine (dev)
   rc-astro.nix         RC-Astro CLI (BlurX/NoiseX/StarXTerminator), from the upstream installer; CUDA on nvidia hosts (dev, gamix)

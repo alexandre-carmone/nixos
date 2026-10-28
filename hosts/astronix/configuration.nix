@@ -104,8 +104,11 @@
   # OST, a browser-driven observatory server, next to junos-web.
   # Web UI on port 80, WebSocket on 9624. junos-web keeps 8080/8443.
   # It runs its own indiserver, so stop KStars' one before using both.
+  # Like junos-web, it runs in alexandre's Plasma session, started by
+  # the SDDM autologin at boot.
   services.astronix.ost = {
     enable = true;
+    user = "alexandre";
     openFirewall = true;
     language = "fr";
     indiPackages = with pkgs; [
