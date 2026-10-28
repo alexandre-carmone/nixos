@@ -60,5 +60,9 @@ let
   };
 in
 {
+  # Also as pkgs.gsc, so services can put it on their PATH
+  # (services.astronix.ost.extraPackages, in ./ost.nix).
+  nixpkgs.overlays = [ (final: prev: { inherit gsc; }) ];
+
   environment.systemPackages = [ gsc ];
 }

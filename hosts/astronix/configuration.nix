@@ -8,6 +8,7 @@
     ../../modules/desktop-plasma.nix
     ../../modules/wifi-hotspot.nix
     ../../modules/ekoslive.nix
+    ../../modules/ost.nix
   ];
 
   networking.hostName = "astronomix";
@@ -98,6 +99,21 @@
     server = "http://localhost:8080";
     username = "alexandre";
     password = "junos";
+  };
+
+  # OST, a browser-driven observatory server, next to junos-web.
+  # Web UI on port 80, WebSocket on 9624. junos-web keeps 8080/8443.
+  # It runs its own indiserver, so stop KStars' one before using both.
+  services.astronix.ost = {
+    enable = true;
+    openFirewall = true;
+    language = "fr";
+    indiPackages = with pkgs; [
+      indi-full
+      indi-3rdparty.indi-toupbase
+      indi-3rdparty.indi-playerone
+    ];
+    extraPackages = [ pkgs.gsc ];
   };
 
   environment.systemPackages = with pkgs; [
