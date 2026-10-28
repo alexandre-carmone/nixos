@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 let
   # Orca 2.4.2 crashes on every slice under native Wayland (EGL) since
@@ -31,6 +31,7 @@ in
     ../../modules/ina-vpn.nix
     ../../modules/ina-proxy.nix
     ./displaylink.nix
+    inputs.claude-desktop.nixosModules.default
   ];
 
   networking.hostName = "inix";
@@ -60,6 +61,9 @@ in
   # NixOS hooks it into GDM login, screen unlock and sudo.
   # Enroll a finger with `fprintd-enroll` after the rebuild.
   services.fprintd.enable = true;
+
+  # Claude Desktop (Chat, Cowork, Code tabs). Flake input in flake.nix.
+  programs.claude-desktop.enable = true;
 
   environment.systemPackages = with pkgs; [
     gcc

@@ -12,6 +12,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     catppuccin.url = "github:catppuccin/nix/release-26.05";
+    # Official Claude Desktop Linux beta, repackaged from Anthropic's .deb.
+    # Not in nixpkgs. Tracks upstream automatically; `just update-input claude-desktop`.
+    claude-desktop = {
+      url = "github:poeck/claude-desktop-nix-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, catppuccin, ... }@inputs:
