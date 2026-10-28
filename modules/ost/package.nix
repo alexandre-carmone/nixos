@@ -2,7 +2,8 @@
 # A headless astrophotography server: INDI control, autofocus, guiding
 # (PHD2), plate solving, sequencer, planner, polar alignment, all-sky.
 # C++/Qt6 backend on a WebSocket (port 9624) plus a static web frontend.
-# Upstream: https://github.com/gehelem/OST, docs at documentation.ostserver.fr.
+# Upstream: https://gitlab.ostserver.fr/ost/ostserver (GitHub gehelem/OST is
+# a mirror), docs at documentation.ostserver.fr.
 #
 # Upstream ships only Ubuntu .deb packages. This builds from source.
 # StellarSolver (Qt6) and QtZeroConf are vendored in the source tree, so
@@ -16,7 +17,7 @@
 #   share/ostserver/      upstream's ostserver.parms.skel, as a reference
 { lib
 , stdenv
-, fetchFromGitHub
+, fetchFromGitLab
 , cmake
 , pkg-config
 , qt6
@@ -32,15 +33,14 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "ostserver";
-  # Upstream tags releases on its GitLab, not on GitHub. The GitHub mirror
-  # is tracked by commit; the version is CHANGELOG.md's latest entry.
-  version = "0.0.19-unstable-2026-10-23";
+  version = "0.0.24";
 
-  src = fetchFromGitHub {
-    owner = "gehelem";
-    repo = "OST";
-    rev = "4921da608441342486c331b641868ced25466594";
-    hash = "sha256-Vprhy4Yp1CLYghXhvlkLIdsJmrslEzC7X+0XozfEgQY=";
+  src = fetchFromGitLab {
+    domain = "gitlab.ostserver.fr";
+    owner = "ost";
+    repo = "ostserver";
+    tag = finalAttrs.version;
+    hash = "sha256-kBdOPDKXAv12p7rKAGd/iQnm+3doXgY8k4dUI8lskcc=";
   };
 
   nativeBuildInputs = [
@@ -108,12 +108,12 @@ stdenv.mkDerivation (finalAttrs: {
     substituteInPlace src/version.hh \
       --replace-fail 'struct Version' 'struct __attribute__((visibility("hidden"))) Version'
 
-    # version.cc comes from `git describe`, or from the Debian changelog.
-    # A fetched tarball has neither. Fill in what we know.
+    # version.cc comes from `git describe`, or from the Debian changelog
+    # via dpkg. A fetched tarball has neither. Fill in what we know.
     cat > generate-version.sh <<'SH'
     #!/bin/sh
-    sed -e 's|@GIT_SHA1@|${finalAttrs.src.rev}|g' \
-        -e 's|@GIT_DATE@|${lib.last (lib.splitString "-unstable-" finalAttrs.version)}|g' \
+    sed -e 's|@GIT_SHA1@|unknown|g' \
+        -e 's|@GIT_DATE@|2026-10-25|g' \
         -e 's|@GIT_COMMIT_SUBJECT@|nixpkgs build|g' \
         -e 's|@GIT_TAG@|${finalAttrs.version}|g' \
         "$2" > "$1"
@@ -134,7 +134,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   meta = {
     description = "Headless astrophotography server driving INDI gear from a browser";
-    homepage = "https://github.com/gehelem/OST";
+    homepage = "https://gitlab.ostserver.fr/ost/ostserver";
     license = lib.licenses.gpl3Only;
     platforms = lib.platforms.linux;
     mainProgram = "ostserver";
