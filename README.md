@@ -8,7 +8,7 @@ NixOS flake for two astrophotography machines and a gaming desktop.
 | --- | --- | --- |
 | `astronix` | `astronomix` | The rig. Headless Plasma 6 on X11, SDDM autologin, xrdp, a fake EDID for the virtual display, a WiFi hotspot fallback, and the `junos-web` capture app. |
 | `dev` | `inix` | The workstation. GNOME, DisplayLink dock, corporate CA and VPN bits, dev tooling, RC-Astro CLI on the CPU. |
-| `gamix` | `gamix` | The gaming desktop. Plasma 6 on Wayland on an NVIDIA card (open modules), CUDA libs on `LD_LIBRARY_PATH`, RC-Astro CLI on the GPU, Steam with Proton-GE and a gamescope session, Heroic, GameMode, MangoHud, Discord. |
+| `gamix` | `gamix` | The gaming desktop. Plasma 6 on Wayland on an NVIDIA card (open modules), CUDA libs on `LD_LIBRARY_PATH`, RC-Astro CLI on the GPU, Folding@home on the GPU, Steam with Proton-GE and a gamescope session, Heroic, GameMode, MangoHud, Discord. |
 
 All three run user `alexandre` and share the astro stack: INDI, KStars, PHD2, Siril.
 `dev` and `gamix` each have a `-dark` twin for darkman.
@@ -44,6 +44,8 @@ modules/
   ina-vpn.nix          `inavpn`: INA VPN in one command, 2FA from tb-otp (dev)
   ina-vpn-auto/tb-otp/ tb-otp + the VPN script; vendor/ is built from the AppImage
   syncthing.nix        services.astronix.syncthing (dev, gamix)
+  foldingathome.nix    services.astronix.foldingathome: Folding@home on the NVIDIA GPU, enabled through the client API (gamix)
+  foldingathome/       the script that enables the GPU and starts folding
   wifi-hotspot.nix     services.astronix.wifi (astronix)
 hosts/
   astronix/            configuration.nix + hardware-configuration.nix
