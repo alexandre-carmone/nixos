@@ -78,7 +78,6 @@ in
     freecad
     orca-slicer
     kubectl
-    awscli
     kubelogin-oidc # `kubectl oidc-login`. ~/.kube/config uses it for the SSO clusters
   ];
 
