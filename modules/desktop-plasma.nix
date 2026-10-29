@@ -2,10 +2,17 @@
 
 # Headless Plasma desktop for the rig.
 # Plasma 6 on Wayland, SDDM autologin, a fake EDID for the virtual display,
-# RustDesk for remote access.
+# krdp and RustDesk for remote access.
 #
 # Plasma 6.8 dropped the X11 session, so no Xorg and no xrdp (X only).
-# Remote access is RustDesk, the user service in hosts/astronix.
+#
+# Remote access:
+#   - krdp, Plasma's RDP server, as a user service below. Any RDP client:
+#       xfreerdp /v:astronomix /u:alexandre /cert:ignore
+#   - RustDesk, the user service in hosts/astronix. On Wayland it captures
+#     through the XDG portal, and the KDE portal asks "which screen?" on the
+#     rig itself. RustDesk 1.5 keeps the portal's restore token, so that
+#     dialog shows once per RustDesk config. Answer it over krdp.
 #
 # The fake EDID makes HDMI-A-1 a connected 1920x1080 output from boot, with
 # or without a monitor. It is a kernel setting (drm.edid_firmware), so KWin
@@ -48,6 +55,52 @@
   users.users.alexandre.packages = with pkgs; [
     kdePackages.kate
   ];
+
+  # krdp in the autologin session. Login is alexandre with the password in
+  # /etc/astronix/krdp.env (owned by alexandre, 0600, the user unit reads it):
+  #   KRDP_PASSWORD=supersecret
+  # No file, no server: ConditionPathExists keeps the unit quiet.
+  # krdpserver refuses to start without a TLS certificate (its --help says
+  # it makes a temporary one, 6.8 does not). preStart makes a self-signed
+  # one once, in ~/.local/share/krdpserver. Hence /cert:ignore on the client.
+  #
+  # The unit name matters. krdp uses two privileged Wayland protocols, fake
+  # input and screencast. KWin only grants them to a process it can match
+  # to a desktop file listing them (X-KDE-Wayland-Interfaces in
+  # org.kde.krdpserver.desktop), and it does that match by the systemd unit
+  # name: app-<desktop file id>.service. Under any other name krdpserver
+  # aborts at start. Ordering and target are the ones from the unit that
+  # ships with krdp (share/systemd/user/app-org.kde.krdpserver.service),
+  # which NixOS does not install.
+  systemd.user.services."app-org.kde.krdpserver" = {
+    description = "KRDP Server";
+    wantedBy = [ "plasma-workspace.target" ];
+    after = [ "plasma-core.target" "plasma-xdg-desktop-portal-kde.service" ];
+    unitConfig.ConditionPathExists = "/etc/astronix/krdp.env";
+    path = [ pkgs.openssl ];
+    preStart = ''
+      d="$HOME/.local/share/krdpserver"
+      if [ ! -s "$d/key.pem" ] || [ ! -s "$d/cert.pem" ]; then
+        mkdir -p "$d"
+        openssl req -x509 -newkey rsa:2048 -nodes -days 3650 \
+          -subj "/CN=$(uname -n)" -keyout "$d/key.pem" -out "$d/cert.pem"
+        chmod 600 "$d/key.pem"
+      fi
+    '';
+    serviceConfig = {
+      Type = "exec";
+      EnvironmentFile = "/etc/astronix/krdp.env";
+      ExecStart = ''${pkgs.kdePackages.krdp}/bin/krdpserver --plasma -u alexandre -p "''${KRDP_PASSWORD}" --certificate %h/.local/share/krdpserver/cert.pem --certificate-key %h/.local/share/krdpserver/key.pem'';
+      Restart = "on-failure";
+      RestartSec = 5;
+    };
+  };
+  networking.firewall.allowedTCPPorts = [ 3389 ];
+
+  # krdp encodes the stream in H.264 through VA-API. Without a driver it
+  # logs "VAAPI: Failed to initialize display". The rig has an Intel N150:
+  # iHD is the driver for Broadwell and later.
+  hardware.graphics.extraPackages = [ pkgs.intel-media-driver ];
 
   # Dark only. At each login:
   #   - apply the Breeze Dark color scheme
