@@ -59,6 +59,9 @@
     # astrophoto disk, owned by alexandre, behind a 0700 mount point.
     user = "alexandre";
     apps.enable = true;
+    # The Profiles tab's Power off / Reboot buttons: a polkit rule lets
+    # alexandre run `systemctl poweroff` / `reboot` from the user unit.
+    hostPower.enable = true;
     # KStars looks up each driver's binary on PATH before starting it.
     # The module default (kstars and phd2 only) has no camera drivers.
     apps.packages = with pkgs; [
@@ -70,15 +73,24 @@
     ];
 
     capturesDir = "/run/media/alexandre/datas/astrophoto";
-    dsoTileDir = "/home/alexandre/junos-data/dso";
+    # Offline DSS2 sky map: a HiPS mirror in the CDS layout
+    # (Norder{k}/Dir{d}/Npix{n}.jpg + info.json + allsky.jpg), written by
+    # `scripts/fetch_skymap.py` or restored with `scripts/pack_skymap.py pull`.
+    # On the astrophoto disk too (~25 GB at order 7). Replaces dsoTileDir:
+    # the old /home/alexandre/junos-data/dso cutouts are no longer read.
+    skymapDir = "/run/media/alexandre/datas/junos-data/skymap";
+    # skymapOnline = true;  # fetch missing tiles from CDS on demand (needs internet)
     httpAddr  = "0.0.0.0:8080";
     httpsAddr = "0.0.0.0:8443";
 
     tls.subjectAltNames = [
       "DNS:localhost"
       "IP:127.0.0.1"
-      "IP:0.0.0.0"   # the host's LAN IP. iOS Safari needs it to trust the cert
+      "DNS:astronomix"
+      "DNS:astronomix.local"
       "DNS:astro.lan"
+      # Add the host's LAN IP ("IP:192.168.x.y"): iOS Safari only trusts the
+      # cert for a name or address listed here.
     ];
     # Self-signed cert. To use your own, set tls.cert and tls.key instead.
     tls.autoGenerate = true;
