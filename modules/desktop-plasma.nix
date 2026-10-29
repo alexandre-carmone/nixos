@@ -1,25 +1,24 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 # Headless Plasma desktop for the rig.
-# Plasma 6 on X11, SDDM autologin, and xrdp for remote access.
+# Plasma 6 on Wayland, SDDM autologin, a fake EDID for the virtual display,
+# RustDesk for remote access.
 #
-# A fake EDID makes HDMI-A-1 look connected at 1920x1080 from boot,
-# with or without a monitor. Without it, Xorg falls back to 1024x768.
-# The modelines below let you resize the display.
+# Plasma 6.8 dropped the X11 session, so no Xorg and no xrdp (X only).
+# Remote access is RustDesk, the user service in hosts/astronix.
+#
+# The fake EDID makes HDMI-A-1 a connected 1920x1080 output from boot, with
+# or without a monitor. It is a kernel setting (drm.edid_firmware), so KWin
+# sees the output the same way Xorg did. Without an output, KWin runs on an
+# internal placeholder screen that nothing can capture.
+# Another size at runtime: `kscreen-doctor output.HDMI-A-1.mode.<id>`.
 {
-  services.displayManager.defaultSession = "plasmax11";
-  services.displayManager.sddm = {
-    enable = true;
-    wayland.enable = false;
-  };
+  # The Plasma module makes "plasma" (Wayland) the default session and runs
+  # SDDM on Wayland with KWin.
+  services.displayManager.sddm.enable = true;
   services.displayManager.autoLogin = {
     enable = true;
     user = "alexandre";
-  };
-  services.xrdp = {
-    enable = true;
-    defaultWindowManager = "startplasma-x11";
-    openFirewall = true;
   };
   services.desktopManager.plasma6.enable = true;
 
@@ -29,34 +28,22 @@
     layout = "us";
     variant = "";
   };
+  # KWin reads kxkbrc, empty until the layout is changed in System Settings,
+  # then falls back to XKB_DEFAULT_LAYOUT. Same as desktop-plasma-wayland.nix.
+  environment.sessionVariables.XKB_DEFAULT_LAYOUT = config.services.xserver.xkb.layout;
 
-  # The fake EDID, and the modes the virtual display can take.
-  hardware.display.edid.modelines."FHD_60" =
-    "173.00 1920 2048 2248 2576 1080 1083 1088 1120 -hsync +vsync";
-  hardware.display.outputs."HDMI-A-1".edid = "FHD_60.bin";
+  # The EDID of a real HDMI-only 1080p monitor (Dell E2219HN), from the
+  # linuxhw/EDID database. Not hardware.display.edid.modelines: that makes a
+  # 128-byte analog EDID with no HDMI block, i915 takes the sink for DVI
+  # and prunes every mode. HDMI-A-1 then shows "connected" with an empty
+  # modes list, and KWin has no output. A command line mode
+  # (video=HDMI-A-1:1920x1080@60e) is pruned the same way.
+  # Another monitor: the patterns must match one row of DigitalDisplay.md
+  # in github.com/linuxhw/EDID, and edid-decode must show a CTA-861 block
+  # with an HDMI vendor block.
+  hardware.display.edid.linuxhw."E2219HN" = [ "E2219HN" "00071E42C96A" ];
+  hardware.display.outputs."HDMI-A-1".edid = "E2219HN.bin";
   hardware.display.outputs."HDMI-A-1".mode = "e";
-
-  services.xserver = {
-    enable = true;
-
-    monitorSection = ''
-      HorizSync   15.0 - 200.0
-      VertRefresh 15.0 - 200.0
-      Modeline "1920x1080" 173.00 1920 2048 2248 2576 1080 1083 1088 1120 -hsync +vsync
-      Modeline "2560x1440" 241.50 2560 2608 2640 2720 1440 1443 1448 1481 +hsync -vsync
-      Modeline "1680x1050" 146.25 1680 1784 1960 2240 1050 1053 1059 1089 -hsync +vsync
-      Option "PreferredMode" "1920x1080"
-    '';
-
-    screenSection = ''
-      DefaultDepth 24
-      SubSection "Display"
-        Depth 24
-        Modes "1920x1080" "2560x1440" "1680x1050"
-        Virtual 1920 1080
-      EndSubSection
-    '';
-  };
 
   users.users.alexandre.packages = with pkgs; [
     kdePackages.kate

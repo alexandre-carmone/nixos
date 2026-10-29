@@ -6,7 +6,7 @@ NixOS flake for two astrophotography machines and a gaming desktop.
 
 | Host | hostName | Role |
 | --- | --- | --- |
-| `astronix` | `astronomix` | The rig. Headless Plasma 6 on X11, SDDM autologin, xrdp, a fake EDID for the virtual display, a WiFi hotspot fallback, the `junos-web` capture app, and the OST observatory server. |
+| `astronix` | `astronomix` | The rig. Headless Plasma 6 on Wayland, SDDM autologin, RustDesk, a fake EDID for the virtual display, a WiFi hotspot fallback, the `junos-web` capture app, and the OST observatory server. |
 | `dev` | `inix` | The workstation. GNOME, DisplayLink dock, corporate CA and VPN bits, dev tooling, RC-Astro CLI on the CPU. |
 | `gamix` | `gamix` | The gaming desktop. Plasma 6 on Wayland on an NVIDIA card (open modules), CUDA libs on `LD_LIBRARY_PATH`, RC-Astro CLI on the GPU, Folding@home on the GPU, Steam with Proton-GE and a gamescope session, Heroic, GameMode, MangoHud, Discord. |
 
@@ -36,7 +36,7 @@ modules/
   ost/                 the ostserver package, built from source
   autostakkert.nix     AutoStakkert!4, under Wine (dev)
   rc-astro.nix         RC-Astro CLI (BlurX/NoiseX/StarXTerminator), from the upstream installer; CUDA on nvidia hosts (dev, gamix)
-  desktop-plasma.nix   headless Plasma + xrdp (astronix)
+  desktop-plasma.nix   headless Plasma on Wayland + RustDesk (astronix)
   desktop-plasma-wayland.nix  Plasma on Wayland, real monitor (gamix)
   desktop-gnome.nix    GNOME (dev)
   gaming.nix           Steam, Proton-GE, gamescope, GameMode, MangoHud, Heroic, Discord (gamix)
