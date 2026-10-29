@@ -39,9 +39,21 @@ let
     libxcb-render-util
   ];
 
+  # nixpkgs' libxisf 0.2.14 added an open(std::filesystem::path) overload.
+  # Siril 1.4.4 calls open(char*), which is now ambiguous and fails to build.
+  # Upstream fixed it in 1.4.5 by wrapping the argument; drop this once
+  # nixpkgs ships siril >= 1.4.5.
+  sirilFixed = pkgs.siril.overrideAttrs (prev: {
+    postPatch = (prev.postPatch or "") + ''
+      substituteInPlace src/io/SirilXISFReader.cpp \
+        --replace-fail "xisfReader.open(filename);" \
+                       "xisfReader.open(LibXISF::String(filename));"
+    '';
+  });
+
   siril = pkgs.symlinkJoin {
     name = "siril-venv-wrapped";
-    paths = [ pkgs.siril ];
+    paths = [ sirilFixed ];
     nativeBuildInputs = [ pkgs.makeWrapper ];
     postBuild = ''
       for b in siril siril-cli; do

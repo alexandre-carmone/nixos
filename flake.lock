@@ -114,17 +114,17 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1791308329,
-        "narHash": "sha256-wTO6Uf7eIRdMRv2heLkZoNhHUntT0UtVtLWIsfual2c=",
+        "lastModified": 1793253609,
+        "narHash": "sha256-79OG6X1/SlMHiaz2dFIwsFwr0ML/kqhCAaeBL2m8/0Q=",
         "owner": "alexandre-carmone",
         "repo": "nixpkgs",
-        "rev": "3fca3558f542c29369b259d2f709c7a1ed45fb03",
+        "rev": "39e02f249ab811b2c00f2588e9d29b28a18688de",
         "type": "github"
       },
       "original": {
         "owner": "alexandre-carmone",
         "repo": "nixpkgs",
-        "rev": "3fca3558f542c29369b259d2f709c7a1ed45fb03",
+        "rev": "39e02f249ab811b2c00f2588e9d29b28a18688de",
         "type": "github"
       }
     },

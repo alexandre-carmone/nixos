@@ -27,7 +27,10 @@
 let
   withCuda = builtins.elem "nvidia" config.services.xserver.videoDrivers;
 
-  cudaLibs = map lib.getLib (with pkgs.cudaPackages; [
+  # ONNX Runtime here is built against CUDA 12, so the CUDA 12 set is
+  # pinned: nixpkgs' default cudaPackages moved on to 13, whose sonames
+  # (libcudart.so.13...) autoPatchelf cannot match.
+  cudaLibs = map lib.getLib (with pkgs.cudaPackages_12; [
     cuda_cudart # libcudart.so.12
     cuda_nvrtc # libnvrtc.so.12, dlopened at run time, never NEEDED
     libcublas # libcublas.so.12, libcublasLt.so.12
