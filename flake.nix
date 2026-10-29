@@ -2,7 +2,7 @@
   description = "Nix config for an astrophoto computer";
 
   inputs = {
-    nixpkgs.url = "github:alexandre-carmone/nixpkgs/3fca3558f542c29369b259d2f709c7a1ed45fb03";
+    nixpkgs.url = "github:alexandre-carmone/nixpkgs/39e02f249ab811b2c00f2588e9d29b28a18688de";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
