@@ -27,11 +27,14 @@ build target=host:
 
 # Build here, then copy and activate on another host over SSH.
 # `just deploy astronix`. Asks the remote sudo password once.
-deploy target ssh_host=("alexandre@" + if target == "astronix" { "astronomix" } else { target }):
+# The SSH host is the flake target name: ~/.ssh/config maps `astronix`
+# to the rig. The remote daemon must accept the paths built here: the
+# remote user in nix.settings.trusted-users, or a signing key it trusts.
+deploy target ssh_host=("alexandre@" + target):
     nixos-rebuild switch --flake {{flake}}#{{target}} --target-host {{ssh_host}} --ask-sudo-password
 
 # Same, as the next boot's default: for a kernel or EDID change.
-deploy-boot target ssh_host=("alexandre@" + if target == "astronix" { "astronomix" } else { target }):
+deploy-boot target ssh_host=("alexandre@" + target):
     nixos-rebuild boot --flake {{flake}}#{{target}} --target-host {{ssh_host}} --ask-sudo-password
 
 # Build this host and list what would change versus the running system.
