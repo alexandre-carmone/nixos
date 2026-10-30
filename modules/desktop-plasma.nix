@@ -125,6 +125,9 @@
       origin_web_ui_allowed = "lan";
       sunshine_name = "astronomix";
       credentials_file = "/home/alexandre/.config/sunshine/credentials.json";
+      # The web UI only answers state-changing requests (PIN, settings)
+      # from these origins; the default is localhost only. https, no port.
+      csrf_allowed_origins = "https://10.0.0.7,https://astronomix,https://astronomix.local,https://astronix,https://astro.lan";
     };
   };
 
