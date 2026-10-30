@@ -43,6 +43,7 @@
     fsType = "ext4";
     options = [ "nosuid" "nodev" "nofail" "x-systemd.device-timeout=10s" ];
   };
+  security.sudo.wheelNeedsPassword = false
 
   services.junos-web = {
     enable = true;
