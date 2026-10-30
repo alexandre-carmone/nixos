@@ -12,7 +12,7 @@
     ./zsh.nix
     ./keyring.nix
   ];
-
+  nix.settings.trusted-users = [ "alexandre" ];
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   boot.loader.systemd-boot.enable = true;
