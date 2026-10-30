@@ -72,6 +72,7 @@ in
     teams-for-linux
     signal-desktop
     vlc
+    moonlight-qt # Moonlight client for Sunshine on the rig
     #makemkv # rips UHD Blu-rays to mkv (libaacs/VLC can't)
     claude-code
     ffmpeg

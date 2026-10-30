@@ -9,6 +9,7 @@
 # Remote access:
 #   - krdp, Plasma's RDP server, as a user service below. Any RDP client:
 #       xfreerdp /v:astronomix /u:alexandre /cert:ignore
+#   - Sunshine, streamed to a Moonlight client. Lower latency than RDP.
 #   - RustDesk, the user service in hosts/astronix. On Wayland it captures
 #     through the XDG portal, and the KDE portal asks "which screen?" on the
 #     rig itself. RustDesk 1.5 keeps the portal's restore token, so that
@@ -96,6 +97,29 @@
     };
   };
   networking.firewall.allowedTCPPorts = [ 3389 ];
+
+  # Sunshine, for Moonlight clients (moonlight-qt on the laptop, apps on
+  # phones). KMS capture reads the framebuffer KWin draws on HDMI-A-1, so
+  # it needs no Wayland protocol and no dialog. It needs cap_sys_admin:
+  # the module makes a setuid-less wrapper with that capability.
+  # Input goes through uinput; the module loads it and ships udev rules
+  # that grant the seat user access.
+  # First use, on the rig:  sunshine --creds alexandre <password>
+  # then pair each client from https://astronomix:47990 (LAN only).
+  # openFirewall opens 47984/47989/47990/48010 TCP and 47998-48002 UDP.
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;
+    openFirewall = true;
+    settings = {
+      capture = "kms";
+      encoder = "vaapi";
+      adapter_name = "/dev/dri/renderD128";
+      origin_web_ui_allowed = "lan";
+      sunshine_name = "astronomix";
+    };
+  };
 
   # krdp encodes the stream in H.264 through VA-API. Without a driver it
   # logs "VAAPI: Failed to initialize display". The rig has an Intel N150:
