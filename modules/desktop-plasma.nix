@@ -104,8 +104,14 @@
   # the module makes a setuid-less wrapper with that capability.
   # Input goes through uinput; the module loads it and ships udev rules
   # that grant the seat user access.
-  # First use, on the rig:  sunshine --creds alexandre <password>
-  # then pair each client from https://astronomix:47990 (LAN only).
+  # Web UI (pairing) on https://astronomix:47990, LAN only. Its login is
+  # alexandre with the password from /etc/astronix/sunshine.env (owned by
+  # alexandre, 0600):
+  #   SUNSHINE_PASSWORD=supersecret
+  # preStart below writes the credentials file Sunshine expects from it at
+  # each start. Without the file, Sunshine starts and the web UI asks to
+  # create a login. Pair a client: open Moonlight, note the PIN, enter it
+  # on the web UI's PIN tab.
   # openFirewall opens 47984/47989/47990/48010 TCP and 47998-48002 UDP.
   services.sunshine = {
     enable = true;
@@ -118,7 +124,26 @@
       adapter_name = "/dev/dri/renderD128";
       origin_web_ui_allowed = "lan";
       sunshine_name = "astronomix";
+      credentials_file = "/home/alexandre/.config/sunshine/credentials.json";
     };
+  };
+
+  # Sunshine stores {username, salt, password} where password is
+  # SHA-256(password + salt), bytes in reverse order, uppercase hex (what
+  # `sunshine --creds` writes; checked against the binary). The module
+  # forces an empty PATH on the unit, hence the absolute tool paths.
+  systemd.user.services.sunshine = {
+    serviceConfig.EnvironmentFile = "-/etc/astronix/sunshine.env";
+    preStart = let c = "${pkgs.coreutils}/bin"; in ''
+      [ -n "''${SUNSHINE_PASSWORD:-}" ] || exit 0
+      f="$HOME/.config/sunshine/credentials.json"
+      ${c}/mkdir -p "$(${c}/dirname "$f")"
+      salt=$(${c}/head -c 64 /dev/urandom | ${c}/base64 | ${c}/tr -dc 'A-Za-z0-9' | ${c}/head -c 16)
+      hash=$(${c}/printf '%s%s' "$SUNSHINE_PASSWORD" "$salt" | ${c}/sha256sum | ${c}/cut -c1-64 \
+        | ${c}/fold -w2 | ${c}/tac | ${c}/tr -d '\n' | ${c}/tr a-f A-F)
+      umask 077
+      ${c}/printf '{"username":"alexandre","salt":"%s","password":"%s"}\n' "$salt" "$hash" > "$f"
+    '';
   };
 
   # krdp encodes the stream in H.264 through VA-API. Without a driver it
