@@ -142,33 +142,8 @@
     cores = 0;           # tous les cores pour ce build
   };
 
-  networking.firewall = {
-    allowedTCPPorts = [ 21115 21116 21117 21118 21119 ];
-    allowedUDPPorts = [ 21116 ];
-  };
-
   services.logind.settings.Login = {
     HandleLidSwitch = "ignore";
     IdleAction = "ignore";
-  };
-
-  # RustDesk 1.4.9 loads libxdo at runtime (dlopen). Nothing in its closure
-  # ships it. Without libxdo, RustDesk silently drops all keyboard and mouse
-  # input. Video and clipboard still work, so the session looks frozen.
-  # 1.4.5 linked libxdo directly. The bug came with the September nixpkgs bump.
-  systemd.user.services.rustdesk = {
-    description = "RustDesk";
-    wantedBy = [ "graphical-session.target" ];
-    partOf = [ "graphical-session.target" ];
-    after = [ "graphical-session.target" ];
-    serviceConfig = {
-      Type = "simple";
-      ExecStart = "${pkgs.rustdesk-flutter}/bin/rustdesk";
-      # The package's wrapper keeps inherited variables.
-      # So this only adds libxdo to the search path.
-      Environment = [ "LD_LIBRARY_PATH=${pkgs.xdotool}/lib" ];
-      Restart = "on-failure";
-      RestartSec = 5;
-    };
   };
 }

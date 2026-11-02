@@ -3,7 +3,6 @@
 # Astro stack for every host:
 #   - INDI drivers, with their udev rules
 #   - capture and processing apps (kstars, phd2, siril, gimp)
-#   - rustdesk, to drive the rig remotely
 #
 # ImPPG has its own module, ./imppg.nix.
 # So does the GSC star catalog, ./gsc.nix. INDI's CCD Simulator needs it.
@@ -80,7 +79,6 @@ in
     siril
     gimp
     nomacs # fast viewer for captured and stacked frames
-    rustdesk-flutter
     indi-full
     indi-3rdparty.indi-toupbase
     indi-3rdparty.indi-playerone

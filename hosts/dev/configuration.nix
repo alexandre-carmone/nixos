@@ -1,5 +1,4 @@
 { config, lib, pkgs, inputs, ... }:
-
 let
   # Orca 2.4.2 crashes on every slice under native Wayland (EGL) since
   # Mesa 26.2.4. The plate thumbnail calls glDrawElements with no index
@@ -22,8 +21,8 @@ in
     ../../modules/desktop-gnome.nix
     ../../modules/darkman.nix
     ../../modules/docker.nix
-    ../../modules/wine.nix
-    ../../modules/autostakkert.nix
+    #../../modules/wine.nix
+    #../../modules/autostakkert.nix
     ../../modules/graxpert.nix
     ../../modules/rc-astro.nix
     ../../modules/syncthing.nix
@@ -66,18 +65,21 @@ in
   programs.claude-desktop.enable = true;
 
   environment.systemPackages = with pkgs; [
+    # RustDesk, client and server: connect to another machine, or be
+    # connected to from the phone or the other host. Not on the rig.
+    rustdesk-flutter
     gcc
     gnumake
     gpclient
     teams-for-linux
     signal-desktop
     vlc
-    moonlight-qt # Moonlight client for Sunshine on the rig
     #makemkv # rips UHD Blu-rays to mkv (libaacs/VLC can't)
     claude-code
     ffmpeg
     freecad
     orca-slicer
+    nodejs_22
     kubectl
     kubelogin-oidc # `kubectl oidc-login`. ~/.kube/config uses it for the SSO clusters
   ];
@@ -102,4 +104,10 @@ in
   '';
 
   environment.variables.OPENSSL_CONF = "/etc/ssl/openssl-legacy.cnf";
+
+  # RustDesk ports, for direct IP access on the LAN (no rendezvous server).
+  networking.firewall = {
+    allowedTCPPorts = [ 21115 21116 21117 21118 21119 ];
+    allowedUDPPorts = [ 21116 ];
+  };
 }

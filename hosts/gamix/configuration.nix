@@ -34,9 +34,18 @@
   };
 
   environment.systemPackages = with pkgs; [
+    # RustDesk, client and server: connect to another machine, or be
+    # connected to from the phone or the other host. Not on the rig.
+    rustdesk-flutter
     # For LazyVim in ~/.config/nvim.
     # nvim-treesitter compiles its grammars. Mason builds some servers.
     gcc
     gnumake
   ];
+
+  # RustDesk ports, for direct IP access on the LAN (no rendezvous server).
+  networking.firewall = {
+    allowedTCPPorts = [ 21115 21116 21117 21118 21119 ];
+    allowedUDPPorts = [ 21116 ];
+  };
 }

@@ -6,9 +6,9 @@ NixOS flake for two astrophotography machines and a gaming desktop.
 
 | Host | hostName | Role |
 | --- | --- | --- |
-| `astronix` | `astronomix` | The rig. Headless Plasma 6 on Wayland, SDDM autologin, krdp and RustDesk, a fake EDID for the virtual display, a WiFi hotspot fallback, the `junos-web` capture app, and the OST observatory server. |
-| `dev` | `inix` | The workstation. GNOME, DisplayLink dock, corporate CA and VPN bits, dev tooling, RC-Astro CLI on the CPU. |
-| `gamix` | `gamix` | The gaming desktop. Plasma 6 on Wayland on an NVIDIA card (open modules), CUDA libs on `LD_LIBRARY_PATH`, RC-Astro CLI on the GPU, Steam with Proton-GE and a gamescope session, Heroic, GameMode, MangoHud, Discord. |
+| `astronix` | `astronomix` | The rig. Headless Plasma 6 on Wayland, SDDM autologin, krdp for remote access, a fake EDID for the virtual display, a WiFi hotspot fallback, the `junos-web` capture app, and the OST observatory server. |
+| `dev` | `inix` | The workstation. GNOME, DisplayLink dock, corporate CA and VPN bits, dev tooling, RC-Astro CLI on the CPU, RustDesk. |
+| `gamix` | `gamix` | The gaming desktop. Plasma 6 on Wayland on an NVIDIA card (open modules), CUDA libs on `LD_LIBRARY_PATH`, RC-Astro CLI on the GPU, Steam with Proton-GE and a gamescope session, Heroic, GameMode, MangoHud, Discord, RustDesk. |
 
 All three run user `alexandre` and share the astro stack: INDI, KStars, PHD2, Siril.
 `dev` and `gamix` each have a `-dark` twin for darkman.
