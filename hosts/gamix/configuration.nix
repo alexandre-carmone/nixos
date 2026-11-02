@@ -13,7 +13,6 @@
     ../../modules/darkman.nix
     ../../modules/gaming.nix
     ../../modules/syncthing.nix
-    ../../modules/foldingathome.nix
   ];
 
   networking.hostName = "gamix";
@@ -32,14 +31,6 @@
     #   devices = [ "nas" ];
     #   type = "sendreceive"; # sendreceive | sendonly | receiveonly | receiveencrypted
     # };
-  };
-
-  # Folding@home on the NVIDIA card. Starts folding on its own after the
-  # first rebuild; pause or tweak it at https://app.foldingathome.org.
-  # See modules/foldingathome.nix for the options.
-  services.astronix.foldingathome = {
-    enable = true;
-    # user = "alexandre"; # name on the leaderboard; Anonymous when unset
   };
 
   environment.systemPackages = with pkgs; [
