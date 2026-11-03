@@ -68,6 +68,7 @@ in
     # RustDesk, client and server: connect to another machine, or be
     # connected to from the phone or the other host. Not on the rig.
     rustdesk-flutter
+    remmina # RDP/VNC client for the rig: 10.0.0.7, user alexandre, krdp password
     gcc
     gnumake
     gpclient
