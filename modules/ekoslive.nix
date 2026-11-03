@@ -11,6 +11,9 @@
 #
 # An overlay replaces pkgs.kstars with the wrapper.
 # So the desktop launcher and junos-web's Launch button both use it.
+# The package's D-Bus service file is rewritten to the wrapper too, so a
+# D-Bus activation of org.kde.kstars (a dbus-send to a KStars that isn't
+# running yet) goes through the login as well.
 #
 # Example:
 #
@@ -25,7 +28,15 @@ let
   inherit (lib) escapeShellArg;
 
   busctl = "${config.systemd.package}/bin/busctl";
-  ekos = "${busctl} --user call -- org.kde.kstars /KStars/Ekos org.kde.kstars.Ekos";
+
+  # --auto-start=no matters. KStars ships a D-Bus service file for
+  # org.kde.kstars, and KStars registers that name (KDBusService::Unique)
+  # before it creates Ekos. A plain call while the name is free makes
+  # dbus-daemon start a second KStars. That one usually wins the name, the
+  # wrapped one exits as a duplicate, and the helper below gives up because
+  # the pid it watches is gone. Result: KStars up, Ekos Live not connected.
+  # Without auto-start the call just fails until our KStars owns the name.
+  ekos = "${busctl} --user --auto-start=no call -- org.kde.kstars /KStars/Ekos org.kde.kstars.Ekos";
 
   # Ekos appears at /KStars/Ekos only after KStars loads its catalogs.
   # That takes a while. $1 is the KStars pid. Give up if KStars exits first.
@@ -44,6 +55,7 @@ let
 
     # A second kstars only raises the running one, already logged in.
     # A new login would re-authenticate and drop the connection.
+    # `status` looks the name up without activating it.
     if ! ${busctl} --user status org.kde.kstars >/dev/null 2>&1; then
       ${login} "$1" &
     fi
@@ -88,6 +100,12 @@ in
           # The wrapper execs KStars, so its $$ is the KStars pid.
           postBuild = ''
             wrapProgram $out/bin/kstars --run '${prelaunch} $$'
+
+            # D-Bus activation must start the wrapper, not the bare KStars.
+            service=share/dbus-1/services/org.kde.kstars.service
+            rm $out/$service
+            substitute ${prev.kstars}/$service $out/$service \
+              --replace-fail ${prev.kstars}/bin/kstars $out/bin/kstars
           '';
         };
       })
