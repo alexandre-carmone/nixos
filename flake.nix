@@ -26,7 +26,7 @@
     # Both args reach the modules through specialArgs.
     # `theme` picks the preset in modules/theme.nix.
     # `host` is the name of the light output. modules/darkman.nix uses it to
-    # switch between `host` and `host-dark`.
+    # switch between `host` and `host-dark` on the hosts that import it.
     mkThemedHost = host: theme: nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs theme host; };
@@ -52,13 +52,12 @@
       ];
     };
 
-    # dev and gamix each have a light and a dark output.
+    # The workstation. Light only, no darkman.
+    nixosConfigurations.dev = mkThemedHost "dev" "light";
+
+    # The gaming desktop has a light and a dark output.
     # They differ in Catppuccin flavor and desktop color scheme.
     # darkman switches between them at sunrise and sunset.
-    nixosConfigurations.dev = mkThemedHost "dev" "light";
-    nixosConfigurations.dev-dark = mkThemedHost "dev" "dark";
-
-    # The gaming desktop.
     nixosConfigurations.gamix = mkThemedHost "gamix" "light";
     nixosConfigurations.gamix-dark = mkThemedHost "gamix" "dark";
   };

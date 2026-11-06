@@ -19,7 +19,6 @@ in
     ../../modules/common.nix
     ../../modules/astro.nix
     ../../modules/desktop-gnome.nix
-    ../../modules/darkman.nix
     ../../modules/docker.nix
     #../../modules/wine.nix
     #../../modules/autostakkert.nix

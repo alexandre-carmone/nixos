@@ -11,7 +11,7 @@ NixOS flake for two astrophotography machines and a gaming desktop.
 | `gamix` | `gamix` | The gaming desktop. Plasma 6 on Wayland on an NVIDIA card (open modules), CUDA libs on `LD_LIBRARY_PATH`, RC-Astro CLI on the GPU, Steam with Proton-GE and a gamescope session, Heroic, GameMode, MangoHud, Discord, RustDesk. |
 
 All three run user `alexandre` and share the astro stack: INDI, KStars, PHD2, Siril.
-`dev` and `gamix` each have a `-dark` twin for darkman.
+`gamix` has a `-dark` twin for darkman. `dev` is light only.
 
 ## Layout
 
@@ -25,7 +25,7 @@ modules/
   input.nix            QMK, keyd esc<->caps, qwerty-fr layout
   home.nix             home-manager + Catppuccin, Ghostty, Zellij
   theme.nix            light/dark settings, shared by both layers
-  darkman.nix          rebuilds into the other theme at sunrise/sunset (dev, gamix)
+  darkman.nix          rebuilds into the other theme at sunrise/sunset (gamix)
   keyring.nix          keyring opt-out
   zsh.nix              zsh + oh-my-zsh
   astro.nix            astro stack (INDI + apps)
@@ -66,7 +66,7 @@ other:
 ```sh
 just              # list every recipe
 just switch       # rebuild + activate this host
-just switch dev-dark
+just switch gamix-dark
 just diff         # build, then show what would change versus the running system
 just check        # evaluate every host without building
 just update       # bump every flake input

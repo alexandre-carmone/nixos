@@ -1,6 +1,6 @@
 { host, ... }:
 
-# Switches a host between light and dark at sunrise and sunset.
+# Switches a host between light and dark at sunrise and sunset (gamix).
 # The Catppuccin TUI themes are read-only links in the store.
 # So switching means a rebuild into the other output: `#<host>` or
 # `#<host>-dark`. No files are edited at runtime.

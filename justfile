@@ -54,11 +54,11 @@ update:
 update-input input:
     nix flake update {{input}} --flake {{flake}}
 
-# Switch this host to dark, as darkman does at dusk.
+# Switch this host to dark, as darkman does at dusk (gamix only).
 dark:
     sudo nixos-rebuild switch --flake {{flake}}#{{host}}-dark
 
-# Switch this host back to the light variant.
+# Switch this host back to the light variant (gamix only).
 light:
     sudo nixos-rebuild switch --flake {{flake}}#{{host}}
 
