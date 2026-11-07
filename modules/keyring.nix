@@ -7,15 +7,6 @@
 # Apps that find a keyring would ask to unlock it at every launch.
 # So the apps below use a local store instead.
 {
-  environment.systemPackages = [
-    # Chromium's OSCrypt keeps the profile encryption key in gnome-libsecret
-    # or kwallet. That key covers cookies and tokens, not just passwords.
-    # So turning off saved passwords is not enough.
-    # `basic` keeps the key in a file inside the profile.
-    # The flag is built into the package, so .desktop launchers get it too.
-    (pkgs.brave.override { commandLineArgs = "--password-store=basic"; })
-  ];
-
   # KWallet off for KDE: Plasma on astronix and gamix, and the KF6 libs
   # kstars uses.
   # With no wallet, they skip it instead of asking for a password.

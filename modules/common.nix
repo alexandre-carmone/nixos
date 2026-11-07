@@ -45,6 +45,7 @@
   services.openssh.enable = true;
 
   environment.systemPackages = with pkgs; [
+    vivaldi
     fd
     ripgrep
     wget
