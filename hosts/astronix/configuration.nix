@@ -42,6 +42,27 @@
     fsType = "ext4";
     options = [ "nosuid" "nodev" "nofail" "x-systemd.device-timeout=10s" ];
   };
+  # Lower power draw. The rig idles most of the night.
+  # Plasma enables power-profiles-daemon. TLP replaces it; both = flapping.
+  # Do not set powerManagement.cpuFreqGovernor / cpufreq.*: the TLP module
+  # nulls them.
+  services.power-profiles-daemon.enable = false;
+  services.tlp = {
+    enable = true;
+    settings = {
+      # No battery on the rig, so TLP applies the *_ON_AC keys.
+      CPU_SCALING_GOVERNOR_ON_AC = "powersave";
+      CPU_ENERGY_PERF_POLICY_ON_AC = "power";
+      CPU_BOOST_ON_AC = 0;                # no turbo: the biggest saving
+      CPU_MAX_PERF_ON_AC = 50;            # % of max frequency
+      PLATFORM_PROFILE_ON_AC = "low-power";
+      # Cameras, mount and focuser hang off USB and serial. Never autosuspend.
+      USB_AUTOSUSPEND = 0;
+      # Hotspot and junos-web clients. Keep wifi awake.
+      WIFI_PWR_ON_AC = "off";
+    };
+  };
+
   security.sudo.wheelNeedsPassword = false;
 
   services.junos-web = {
