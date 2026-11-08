@@ -45,7 +45,7 @@
   services.openssh.enable = true;
 
   environment.systemPackages = with pkgs; [
-    vivaldi
+    google-chrome
     fd
     ripgrep
     wget
