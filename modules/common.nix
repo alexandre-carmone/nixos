@@ -34,18 +34,10 @@
   programs.neovim.defaultEditor = true;
   programs.lazygit.enable = true;
 
-  programs.chromium = {
-    enable = true;
-    extensions = [
-      "nngceckbapebfimnlniiiahkandclblb" # Bitwarden
-    ];
-  };
-
   programs.firefox.enable = true;
   services.openssh.enable = true;
 
   environment.systemPackages = with pkgs; [
-    google-chrome
     fd
     ripgrep
     wget
