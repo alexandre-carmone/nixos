@@ -29,6 +29,7 @@ modules/
   keyring.nix          keyring opt-out
   zsh.nix              zsh + oh-my-zsh
   astro.nix            astro stack (INDI + apps)
+  kstars.nix           KStars from the `kstars` flake input (local checkout), not the nixpkgs release
   imppg.nix            ImPPG, built from source
   gsc.nix              GSC star catalog, for INDI's CCD Simulator
   graxpert.nix         GraXpert, from the upstream bundle

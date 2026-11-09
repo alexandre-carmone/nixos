@@ -18,6 +18,16 @@
       url = "github:poeck/claude-desktop-nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # KStars sources, built by modules/kstars.nix in place of the nixpkgs
+    # release. Points at the local checkout: it carries commits the fork
+    # does not have yet. `just update-input kstars` after each commit there.
+    # Only tracked files are used (git input), so build/ stays out.
+    # Once pushed, switch to "github:alexandre-carmone/kstars" so the other
+    # hosts can build it without this checkout.
+    kstars = {
+      url = "git+file:///home/alexandre/Projects/kstars";
+      flake = false;
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, catppuccin, ... }@inputs:

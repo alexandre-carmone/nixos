@@ -99,6 +99,22 @@
         "type": "github"
       }
     },
+    "kstars": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794179709,
+        "narHash": "sha256-+6uMf86d9abqnhAc2b1y1BVrxPMI3hc/ujI4TJw053A=",
+        "ref": "refs/heads/master",
+        "rev": "baba5b11eaa17a013546ee4c8124ef185d0b84dc",
+        "revCount": 17147,
+        "type": "git",
+        "url": "file:///home/alexandre/Projects/kstars"
+      },
+      "original": {
+        "type": "git",
+        "url": "file:///home/alexandre/Projects/kstars"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1787640266,
@@ -134,6 +150,7 @@
         "claude-desktop": "claude-desktop",
         "home-manager": "home-manager",
         "junos": "junos",
+        "kstars": "kstars",
         "nixpkgs": "nixpkgs_2"
       }
     },

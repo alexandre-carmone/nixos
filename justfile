@@ -54,6 +54,9 @@ update:
 update-input input:
     nix flake update {{input}} --flake {{flake}}
 
+# Pin `kstars` to the current commit of ~/Projects/kstars, then switch.
+kstars target=host: (update-input "kstars") (switch target)
+
 # Switch this host to dark, as darkman does at dusk (gamix only).
 dark:
     sudo nixos-rebuild switch --flake {{flake}}#{{host}}-dark

@@ -4,6 +4,7 @@
 #   - INDI drivers, with their udev rules
 #   - capture and processing apps (kstars, phd2, siril, gimp)
 #
+# KStars comes from the `kstars` flake input, see ./kstars.nix.
 # ImPPG has its own module, ./imppg.nix.
 # So does the GSC star catalog, ./gsc.nix. INDI's CCD Simulator needs it.
 # It weighs ~235 MB and only serves simulated sessions.
@@ -53,7 +54,7 @@ let
   };
 in
 {
-  imports = [ ./imppg.nix ./gsc.nix ];
+  imports = [ ./kstars.nix ./imppg.nix ./gsc.nix ];
 
   services.udev.packages = [
     pkgs.indi-full
