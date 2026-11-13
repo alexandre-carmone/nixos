@@ -19,13 +19,13 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # KStars sources, built by modules/kstars.nix in place of the nixpkgs
-    # release. Points at the local checkout: it carries commits the fork
-    # does not have yet. `just update-input kstars` after each commit there.
-    # Only tracked files are used (git input), so build/ stays out.
-    # Once pushed, switch to "github:alexandre-carmone/kstars" so the other
-    # hosts can build it without this checkout.
+    # release. Points at the GitHub fork (public), fetched as a tarball, so
+    # every host builds it without a local checkout or SSH key.
+    # `just kstars` after each push there.
+    # To test unpushed commits, override it for one build:
+    #   --override-input kstars git+file:///home/alexandre/Projects/kstars
     kstars = {
-      url = "git+file:///home/alexandre/Projects/kstars";
+      url = "github:alexandre-carmone/kstars";
       flake = false;
     };
   };

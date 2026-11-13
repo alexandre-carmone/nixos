@@ -19,7 +19,7 @@ in
   nixpkgs.overlays = lib.mkBefore [
     (final: prev: {
       kstars = prev.kstars.overrideAttrs (old: {
-        # A dirty checkout has no rev. Nix then builds the working tree.
+        # A dirty git+file override has no rev. Nix then builds the working tree.
         version = "3.8.6-${src.shortRev or "dirty"}";
         inherit src;
         buildInputs = old.buildInputs ++ (with final.kdePackages; [

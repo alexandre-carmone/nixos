@@ -104,15 +104,15 @@
       "locked": {
         "lastModified": 1794179709,
         "narHash": "sha256-+6uMf86d9abqnhAc2b1y1BVrxPMI3hc/ujI4TJw053A=",
-        "ref": "refs/heads/master",
+        "owner": "alexandre-carmone",
+        "repo": "kstars",
         "rev": "baba5b11eaa17a013546ee4c8124ef185d0b84dc",
-        "revCount": 17147,
-        "type": "git",
-        "url": "file:///home/alexandre/Projects/kstars"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "file:///home/alexandre/Projects/kstars"
+        "owner": "alexandre-carmone",
+        "repo": "kstars",
+        "type": "github"
       }
     },
     "nixpkgs": {
