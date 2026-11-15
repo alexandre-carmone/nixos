@@ -86,11 +86,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1793721473,
-        "narHash": "sha256-xlomlzAfHWd+uohCmxir4j2X7yqK9AuvxJak7XXixH8=",
+        "lastModified": 1794524179,
+        "narHash": "sha256-qHzh82k1v+TMJ7ePJS2yY9D9ZEkkhodI8fauA+wBa/E=",
         "owner": "alexandre-carmone",
         "repo": "Junos",
-        "rev": "504a3e7f5b19118e3a7e18efe830e845585690f4",
+        "rev": "fc236c1709dd6b554cfa7b5eb9e1c456f53e2bdf",
         "type": "github"
       },
       "original": {

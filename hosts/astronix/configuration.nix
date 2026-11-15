@@ -64,11 +64,10 @@
   };
 
   security.sudo.wheelNeedsPassword = false;
-
   services.junos-web = {
     enable = true;
     openFirewall = true;
-
+    guider.enable = true;
     # Run as a user service in alexandre's Plasma session.
     # This way the Launch buttons open KStars and PHD2 on this desktop.
     # The hardened system unit could not run them. Its PATH had only
